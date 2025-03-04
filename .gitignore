@@ -1,0 +1,28 @@
+# Build directories
+build/
+out/
+cmake-build-*/
+
+# Runtime data
+ data/tasks.db
+ data/tasks.db.tmp
+
+# IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+
+# OS files
+.DS_Store
+Thumbs.db
