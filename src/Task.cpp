@@ -3,17 +3,14 @@
 #include <algorithm>
 #include <cctype>
 #include <stdexcept>
+#include <utility>
 
 namespace todo {
 
 Task::Task(int id, std::string title, std::string description,
            Priority priority, std::string dueDate)
-    : id_(id),
-      title_(std::move(title)),
-      description_(std::move(description)),
-      priority_(priority),
-      dueDate_(std::move(dueDate)),
-      completed_(false) {}
+    : id_(id), title_(std::move(title)), description_(std::move(description)),
+      priority_(priority), dueDate_(std::move(dueDate)), completed_(false) {}
 
 int Task::getId() const noexcept { return id_; }
 const std::string& Task::getTitle() const noexcept { return title_; }
@@ -41,7 +38,6 @@ Priority Task::priorityFromString(const std::string& value) {
     std::string normalized = value;
     std::transform(normalized.begin(), normalized.end(), normalized.begin(),
                    [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
-
     if (normalized == "low") return Priority::Low;
     if (normalized == "medium") return Priority::Medium;
     if (normalized == "high") return Priority::High;
