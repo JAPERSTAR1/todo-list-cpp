@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <utility>
 
 namespace todo {
 namespace {
@@ -34,29 +35,31 @@ std::vector<std::string> split(const std::string& line) {
 TodoList::TodoList(std::string storagePath)
     : storagePath_(std::move(storagePath)), nextId_(1) {}
 
-int TodoList::addTask(std::string title, std::string description,
-                      Priority priority, std::string dueDate) {
+int TodoList::addTask(std::string title, std::string description, Priority priority, std::string dueDate) {
     const int id = nextId_++;
-    tasks_.emplace_back(id, sanitize(std::move(title)), sanitize(std::move(description)),
-                        priority, sanitize(std::move(dueDate)));
+    tasks_.emplace_back(id, sanitize(std::move(title)), sanitize(std::move(description)), priority,
+                        sanitize(std::move(dueDate)));
     return id;
 }
 
 Task* TodoList::findTaskMutable(int id) {
-    const auto it = std::find_if(tasks_.begin(), tasks_.end(),
-        [id](const Task& task) { return task.getId() == id; });
+    const auto it = std::find_if(tasks_.begin(), tasks_.end(), [id](const Task& task) {
+        return task.getId() == id;
+    });
     return it == tasks_.end() ? nullptr : &*it;
 }
 
 const Task* TodoList::findTask(int id) const {
-    const auto it = std::find_if(tasks_.begin(), tasks_.end(),
-        [id](const Task& task) { return task.getId() == id; });
+    const auto it = std::find_if(tasks_.begin(), tasks_.end(), [id](const Task& task) {
+        return task.getId() == id;
+    });
     return it == tasks_.end() ? nullptr : &*it;
 }
 
 bool TodoList::removeTask(int id) {
-    const auto it = std::remove_if(tasks_.begin(), tasks_.end(),
-        [id](const Task& task) { return task.getId() == id; });
+    const auto it = std::remove_if(tasks_.begin(), tasks_.end(), [id](const Task& task) {
+        return task.getId() == id;
+    });
     if (it == tasks_.end()) return false;
     tasks_.erase(it, tasks_.end());
     return true;
@@ -123,7 +126,6 @@ bool TodoList::load() {
         if (line.empty()) continue;
         const auto fields = split(line);
         if (fields.size() != 6) continue;
-
         try {
             const int id = std::stoi(fields[0]);
             Task task(id, fields[1], fields[2], Task::priorityFromString(fields[3]), fields[4]);
@@ -150,8 +152,7 @@ bool TodoList::save() const {
     if (!file) return false;
 
     for (const Task& task : tasks_) {
-        file << task.getId() << '\t'
-             << sanitize(task.getTitle()) << '\t'
+        file << task.getId() << '\t' << sanitize(task.getTitle()) << '\t'
              << sanitize(task.getDescription()) << '\t'
              << Task::priorityToString(task.getPriority()) << '\t'
              << sanitize(task.getDueDate()) << '\t'
