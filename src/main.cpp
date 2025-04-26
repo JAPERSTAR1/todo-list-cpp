@@ -1,5 +1,6 @@
 #include "TodoList.h"
 
+#include <exception>
 #include <iostream>
 #include <limits>
 #include <optional>
@@ -108,16 +109,12 @@ void showMenu() {
 
 int main() {
     TodoList list;
-    if (!list.load()) {
-        std::cerr << "Warning: Could not load saved tasks.\n";
-    }
+    if (!list.load()) std::cerr << "Warning: Could not load saved tasks.\n";
 
     std::cout << "Welcome to Todo List CLI!\n";
-
     while (true) {
         showMenu();
         const int choice = readInt("Choose an option: ");
-
         switch (choice) {
             case 1: addTask(list); break;
             case 2: printTasks(list.getAllTasks()); break;
