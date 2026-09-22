@@ -4,8 +4,10 @@ out/
 cmake-build-*/
 
 # Runtime data
- data/tasks.db
- data/tasks.db.tmp
+data/tasks.db
+data/tasks.db.tmp
+
+data/*.db
 
 # IDE files
 .vscode/
